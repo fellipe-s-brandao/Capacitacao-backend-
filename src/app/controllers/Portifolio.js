@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import Project from '@/app/Schemas/Project';
 import Slugify from '../../utils/Slugify';
+import AuthMiddleware from '@/app/middlewares/Auth';
 
 const router = Router();
 
@@ -20,23 +21,15 @@ router.get('/', (request, response) => {
     });
 });
 
-// router.get('/id/:projectId', (request, response) => {
-//   Project.findById(request.params.projectId)
-//     .then((projects) => {
-//       response.send(projects);
-//     })
-//     .catch((error) => {
-//       console.error('Erro ao salvar no banco de Dados', error);
-//       response.status(400).send({
-//         error: 'Não foi possível obter os dados do projeto. Tente novamente.',
-//       });
-//     });
-// });
-
-router.get('/:projectSlug', (request, response) => {
+router.get('/procura/:projectSlug', (request, response) => {
   Project.findOne({ slug: request.params.projectSlug })
     .then((project) => {
-      response.send(project);
+      if (project) {
+        response.send(project);
+      } else {
+        console.error('Projeto não encontrado');
+        return response.status(404).send({ error: 'Projeto não encontrado' });
+      }
     })
     .catch((error) => {
       console.error('Erro ao obter os dados do projeto', error);
@@ -46,7 +39,7 @@ router.get('/:projectSlug', (request, response) => {
     });
 });
 
-router.post('/', (request, response) => {
+router.post('/insere', AuthMiddleware, (request, response) => {
   const { title, slug, description, category } = request.body;
   Project.create({ title, slug, description, category })
     .then((project) => {
@@ -61,7 +54,7 @@ router.post('/', (request, response) => {
     });
 });
 
-router.put('/:projectId', (request, response) => {
+router.put('/atualiza/:projectId', AuthMiddleware, (request, response) => {
   const { title, description, category } = request.body;
   let slug = undefined;
   if (title) {
@@ -90,7 +83,7 @@ router.put('/:projectId', (request, response) => {
     });
 });
 
-router.delete('/:projectId', (request, response) => {
+router.delete('/delete/:projectId', AuthMiddleware, (request, response) => {
   Project.findByIdAndRemove(request.params.projectId)
     .then(() => {
       response.send({ message: 'Projeto removido com sucesso.' });

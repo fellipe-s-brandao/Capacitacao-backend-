@@ -1,0 +1,153 @@
+swagger: '2.0'
+info:
+  description: 'CRUD de projetos do portifólio no banco de dados'
+  version: '1.0.0'
+  title: 'capacitação comp'
+host: 'localhost:3000'
+basePath: '/portifolio'
+paths:
+  /:
+    get:
+      tags:
+        - 'Obtém projetos do portifólio'
+      summary: 'Obtém todos  os projetos do portifólios do banco de dados'
+      description: 'Lista todos os projetos portifólios cadastrados no banco de dados'
+      operationId: 'Obter'
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: '{error: "Não foi possível obter os dados do projeto. Tente novamente." }'
+
+  /procura/{projectSlug}:
+    get:
+      summary: 'Procura projeto pela slug'
+      description: 'Retorna o projeto do portifolio que pussui a slug que foi requisitada'
+      operationId: 'Obtém projetos do portifólio'
+      tags:
+       - 'Obtém projetos do portifólio'
+      parameters:
+      - name: projectSlug
+        in: path
+        description: 'Slug do projeto que será procurado'
+        type: string
+        required: true
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/portifolio'
+        '400':
+          description: '{error: "Não foi possível obter os dados do projeto. Tente novamente." }'
+        '404':
+          description: '{error: "Projeto não encontrado" }'
+          
+  /insere:
+    post:
+      summary: 'Insere projetos do portifólio no banco de dados'
+      description: 'Insere proejtos do portifólio no banco de dados'
+      operationId: 'Cria projetos'
+      tags:
+        - 'Insere projetos no portifólio'
+      parameters:
+      - in: body
+        name: body
+        description: inserir projeto
+        required: true
+        schema:
+          type: object
+          properties:
+            title:
+              type: 'string'
+              example: 'projeto1'
+            description:
+              type: 'string'
+              example: 'pojeto 1 de cor'
+            category:
+              type: 'string'
+              example: 'site'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/portifolio'
+        '400':
+          description: '{error: "Não foi possível salvar o seu projeto. Verifique os dados e tente novamente." }'
+  /atualiza/{projectId}:
+    put:
+      summary: 'Atualiza o projeto do portifólio pelo Id do projeto'
+      description: 'Atualiza o projeto que pussui o id informado'
+      operationId: 'Atualiza pelo id'
+      tags:
+       - 'Atualiza projeto pelo id'
+      parameters:
+      - name: projectId
+        in: path
+        description: 'Slug do projeto que será procurado'
+        type: integer
+        format: int64
+        required: true
+      - in: body
+        name: body
+        description: atualizar portifólio
+        required: true
+        schema:
+          type: object
+          properties:
+            title:
+              type: 'string'
+              example: 'projeto1'
+            description:
+              type: 'string'
+              example: 'pojeto 1 de cor'
+            category:
+              type: 'string'
+              example: 'site'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/portifolio'
+        '400':
+          description: '{error: "Não foi possível atualizar seu projeto. Verifique os dados e tente novamente." }'
+
+  /delete/{projectId}:
+    delete:
+      summary: 'Deleta projeto do portifólio pelo id informado'
+      description: 'Deleta projeto do portifolio que pussui o id informado'
+      operationId: 'Deleta projeto'
+      tags:
+       - 'Deleta projeto do portifólio'
+      parameters:
+      - name: projectId
+        in: path
+        description: 'Slug do projeto que será procurado'
+        type: integer
+        format: int64
+        required: true
+      responses:
+        '200':
+          description: '{ message: "Projeto removido com sucesso." }'
+        '400':
+          description: '{error: "Erro ao remover projeto." }'
+        
+                
+
+definitions:
+  portifolio:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      title:
+        type: string
+      slug:
+        type: string
+      description:
+        type: string
+      category:
+        type: string
+      createdAt:
+        type: string
+  

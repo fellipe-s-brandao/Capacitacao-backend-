@@ -1,0 +1,156 @@
+swagger: '2.0'
+info:
+  description: 'Autenticação de usuário'
+  version: '1.0.0'
+  title: 'capacitação comp'
+host: 'localhost:3000'
+basePath: '/auth'
+paths:
+  /register:
+    post:
+      summary: 'Insere usuários no banco de dados'
+      description: 'Insere usuário no banco de dados'
+      operationId: 'Insere usuário'
+      tags:
+        - 'Insere usuários'
+      parameters:
+      - in: body
+        name: body
+        description: registrar usuário
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: 'string'
+              example: 'Fellipe'
+            email:
+              type: 'string'
+              example: 'fellipe@gmail.com'
+            password:
+              type: 'string'
+              example: '123'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/user'
+        '400':
+          description: '{error: "Registration failed" }'
+        '500':
+          description: '{error: "Registration failed"}'
+  /login:
+    post:
+      summary: 'Faz o login do usuário'
+      description: 'Faz o login do usuário'
+      operationId: 'Faz o login'
+      tags:
+        - 'Login do usuários'
+      parameters:
+      - in: body
+        name: body
+        description: login do usuário
+        required: true
+        schema:
+          type: object
+          properties:
+            email:
+              type: 'string'
+              example: 'fellipe@gmail.com'
+            password:
+              type: 'string'
+              example: '123'
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: object
+            properties:
+              token:
+                type: 'string'
+                example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MTdkODg2NThiYTVmYzAwYTQxY2IyY2IiLCJpYXQiOjE2MzU2MjQ2MjgsImV4cCI6MTYzNTcxMTAyOH0.hqkLOxmQcJAEcbueyB3q-7vIJqQYh6QkWBl0XA8vnDI'
+              tokenExpiration:
+                type: 'string'
+                example: '1d'
+        '400':
+          description: '{error: "invalid password." }'
+        '404':
+          description: '{error: "User not found." }'
+        '500':
+          description: '{error: "Internal server error." }'
+          
+            
+  /forgot-password:
+    post:
+      summary: 'Usuário esqueceu a senha de login'
+      description: 'Envia token no email para recuperar a senha'
+      operationId: 'esqueceu a senha'
+      tags:
+        - 'Esqueceu a senha de login'
+      parameters:
+      - in: body
+        name: body
+        description: email do usuário
+        required: true
+        schema:
+          type: object
+          properties:
+            email:
+              type: 'string'
+              example: 'fellipe@gmail.com'
+      responses:
+        '200':
+          description: ''
+        '400':
+          description: '{error: Fail sending recover password mail." }'
+        '404':
+          description: '{error: "User not found." }'
+        '500':
+          description: '{error: "Internal server error." }'          
+  
+  /reset-password:
+    post:
+      summary: 'Usuário informa token e nova senha de login'
+      description: 'Usuário informa token e nova senha'
+      operationId: 'nova a senha'
+      tags:
+        - 'Nova senha de login'
+      parameters:
+      - in: body
+        name: body
+        description: email, nova senha e token
+        required: true
+        schema:
+          type: object
+          properties:
+            email:
+              type: 'string'
+              example: 'fellipe@gmail.com'
+            token:
+              type: 'string'
+              example: 'ca21a8cb7112461ddb0cf4548cccb6367e63e5f2'
+            newPassword:
+              type: 'string'
+              example: '123'
+      responses:
+        '200':
+          description: '{message: "Senha trocada com sucesso"}'
+        '404':
+          description: '{error: "User not found." }'
+        '500':
+          description: '{error: "Internal server error." }'   
+    
+definitions:
+  user:
+    type: object
+    properties:
+      __id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      email:
+        type: string
+      createdAt:
+        type: string
+  
