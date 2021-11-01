@@ -6,6 +6,7 @@
 - Autenticação com token(jwt)
 - Utilização do Express
 - Crud completo no MongoDB
+- Recuperação de senha com o nodemailer
 
 ## Rotas
 **Leia a documentação do Swagger**
